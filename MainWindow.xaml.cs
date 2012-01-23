@@ -22,7 +22,7 @@ namespace SkeletalTracking
     /// 
     
 
-    public partial class MainWindow : Window
+    public partial class MainWindow : Window, BallModelListener
     {
         public MainWindow()
         {
@@ -47,6 +47,14 @@ namespace SkeletalTracking
         public float k_yMaxJointScale = 1.5f;
 
         int i;
+
+        public void handleBallModelChanged(BallModel ball)
+        {
+            Ellipse ellipse = ball.getEllipse();
+            Canvas.SetLeft(ellipse, ball.getX());
+            Canvas.SetTop(ellipse, ball.getY());
+            Canvas.SetZIndex(ellipse, 100);
+        }
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
             SetupKinect();
