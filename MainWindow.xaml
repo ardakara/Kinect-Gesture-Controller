@@ -86,7 +86,7 @@
               <VisualBrush.Visual>
                  <Ellipse Height="65"
                           Width="65"
-                          Fill="#000000" Stroke="Black" />
+                          Fill="#888888" Stroke="Black" />
               </VisualBrush.Visual>
             </VisualBrush>
           </TextBlock.Background>
