@@ -19,7 +19,8 @@ namespace SkeletalTracking
         {
 
             /* YOUR CODE HERE*/
-            if (areWristsTogether(skeleton))
+            if (areWristsTogether(skeleton) &&
+                isCloseToBody(skeleton))
             {
                 targets[1].setTargetSelected();
             }
@@ -28,7 +29,9 @@ namespace SkeletalTracking
                 targets[1].setTargetUnselected();
             }
 
-            if (areArmsStraight(skeleton))
+            if (areArmsStraight(skeleton) &&
+                areWristsTogether(skeleton) &&
+                !isCloseToBody(skeleton))
             {
                 targets[2].setTargetSelected();
             }
@@ -36,14 +39,14 @@ namespace SkeletalTracking
             {
                 targets[2].setTargetUnselected();
             }
-
-            if (isCloseToBody(skeleton))
+            
+            if (areWristsTogether(skeleton))
             {
-                targets[3].setTargetSelected();
+                targets[5].setTargetSelected();
             }
             else
             {
-                targets[3].setTargetUnselected();
+                targets[5].setTargetUnselected();
             }
 
         }
