@@ -12,108 +12,136 @@ namespace SkeletalTracking
     class BallModel
     {
         private int _id;
-        private int _x
+        public int ID
+        {
+            get
+            {
+                return _id;
+            }
+        }
+        private Boolean _exists;
+        public Boolean Exists
         {
             set
             {
-                this._x = value;
-                this.fireBallModelChanged();
+                _exists = value;
             }
+
             get
             {
-                return this._x;
+                return _exists;
             }
+
         }
-        private int _y
+        private double _angle;
+        public double Angle
         {
+            get
+            {
+                return _angle;
+            }
             set
             {
-                this._y = value;
-                this.fireBallModelChanged();
-            }
-            get
-            {
-                return this._y;
+                _angle = value;
             }
         }
-        private int _r
+
+        private double _x;
+        public double X
         {
+            get
+            {
+                return _x;
+            }
+            set
+            {
+                _x = value;
+                this.fireBallModelChanged();
+            }
+        }
+        private double _y;
+        public double Y
+        {
+            get
+            {
+                return _y;
+            }
+            set
+            {
+                _y = value;
+                this.fireBallModelChanged();
+            }
+
+        }
+        private double _r;
+        public double R
+        {
+
+            get
+            {
+                return this._r;
+            }
             set
             {
                 this._r = value;
                 this.fireBallModelChanged();
             }
+        }
+        private double _velocity;
+        public double Velocity
+        {
             get
             {
-                return this._r;
+                return _velocity;
+            }
+            set
+            {
+                _velocity = value;
             }
         }
-        private Boolean _isInHands;
-        private Ellipse _elipse;
-        private Brush _target_color;
-        private List<BallModelListener> _listeners;
-        public BallModel(int id, int x, int y, int r, Boolean isInHands)
+        private Brush _targetColor;
+        public Brush TargetColor
         {
-            _target_color = new SolidColorBrush(Colors.Red);
-            _id = id;
-            _x = x;
-            _y = y;
-            _isInHands = true;
-            _r = r;
-            _elipse = this.generateEllipse();
+            get
+            {
+                return _targetColor;
+            }
+        }
+        private List<BallModelListener> _listeners = new List<BallModelListener>();
+        public BallModel(int id, double x, double y, double r, double angle, double velocity)
+        {
+            _targetColor = new SolidColorBrush(Colors.Red);
 
+            _id = id;
+
+            this.Y = y;
+            this.X = x;
+            this.R = r;
+
+            this.Velocity = velocity;
+            this.Angle = angle;
         }
         public void addBallModelListener(BallModelListener listener)
         {
             this._listeners.Add(listener);
         }
+        public void removeBallModelListener(BallModelListener listener)
+        {
+            this._listeners.Remove(listener);
+        }
         public void fireBallModelChanged()
         {
-            foreach (BallModelListener listener in this._listeners){
+            foreach (BallModelListener listener in this._listeners)
+            {
                 listener.handleBallModelChanged(this);
             }
         }
-        public void setPosition(int x, int y)
+        public void setPosition(double x, double y)
         {
-            this._x = x;
-            this._y = y;
-        }            
-
-        public int getX()
-        {
-            return this._x;
+            this.X = x;
+            this.Y = y;
         }
-
-        public int getY()
-        {
-            return this._y;
-        }
-
-        public void setRadius(int r)
-        {
-            this._r = r;
-            this._elipse = this.generateEllipse();
-        }
-
-        public int getRadius()
-        {
-            return _r;
-        }
-
-        public Ellipse getEllipse()
-        {
-            return this._elipse;
-        }
-        private Ellipse generateEllipse()
-        {
-            var circle = new Ellipse();
-            circle.Width = this._r * 2;
-            circle.Height = this._r * 2;
-            circle.Stroke = new SolidColorBrush(Colors.Black);
-            circle.StrokeThickness = 1;
-            circle.Fill = this._target_color;
-            return circle;
-        }
+       
 
     }
 }

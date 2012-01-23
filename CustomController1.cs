@@ -13,7 +13,13 @@ namespace SkeletalTracking
 {
     class CustomController1 : SkeletonController
     {
-        public CustomController1(MainWindow win) : base(win){}
+        private BallModels _balls;
+        private BallModel curBall = null;
+        public CustomController1(MainWindow win)
+            : base(win)
+        {
+            _balls = new BallModels(this.window);
+        }
 
         public override void processSkeletonFrame(SkeletonData skeleton, Dictionary<int, Target> targets)
         {
@@ -37,11 +43,11 @@ namespace SkeletalTracking
                 targets[2].setTargetUnselected();
             }
 
+
         }
 
         public override void controllerActivated(Dictionary<int, Target> targets)
         {
-
             /* YOUR CODE HERE */
 
         }
@@ -74,7 +80,7 @@ namespace SkeletalTracking
         private bool areArmsStraight(SkeletonData skeleton)
         {
             Joint centerShoulder = skeleton.Joints[JointID.ShoulderCenter].ScaleTo(640, 480, window.k_xMaxJointScale, window.k_yMaxJointScale);
-            
+
             Joint leftHand = skeleton.Joints[JointID.HandLeft].ScaleTo(640, 480, window.k_xMaxJointScale, window.k_yMaxJointScale);
             Joint rightHand = skeleton.Joints[JointID.HandRight].ScaleTo(640, 480, window.k_xMaxJointScale, window.k_yMaxJointScale);
 
