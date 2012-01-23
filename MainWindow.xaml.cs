@@ -12,7 +12,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using Microsoft.Research.Kinect.Nui;
-using Coding4Fun.Kinect.Wpf; 
+using Coding4Fun.Kinect.Wpf;
 
 namespace SkeletalTracking
 {
@@ -20,9 +20,9 @@ namespace SkeletalTracking
     /// Interaction logic for MainWindow.xaml
     /// </summary>
     /// 
-    
 
-    public partial class MainWindow : Window, BallModelListener
+
+    public partial class MainWindow : Window, BallModelListener, BallModelsListener
     {
         public MainWindow()
         {
@@ -39,8 +39,9 @@ namespace SkeletalTracking
 
         //Holds the currently active controller
         SkeletonController currentController;
-       
+
         Dictionary<int, Target> targets = new Dictionary<int, Target>();
+        Dictionary<int, Ellipse> balls = new Dictionary<int, Ellipse>();
 
         //Scaling constants
         public float k_xMaxJointScale = 1.5f;
@@ -48,12 +49,49 @@ namespace SkeletalTracking
 
         int i;
 
-        public void handleBallModelChanged(BallModel ball)
+        void BallModelsListener.handleBallAdded(BallModel ball)
         {
-            Ellipse ellipse = ball.getEllipse();
-            Canvas.SetLeft(ellipse, ball.getX());
-            Canvas.SetTop(ellipse, ball.getY());
-            Canvas.SetZIndex(ellipse, 100);
+            int id = ball.ID;
+            Ellipse ellipse = generateEllipse(ball);
+            balls.Add(id, ellipse);
+            if (!MainCanvas.Children.Contains(ellipse))
+            {
+                MainCanvas.Children.Add(ellipse);
+            }
+
+        }
+
+        private static Ellipse generateEllipse(BallModel ball)
+        {
+
+            var circle = new Ellipse();
+            circle.Width = ball.R * 2;
+            circle.Height = ball.R * 2;
+            circle.Stroke = new SolidColorBrush(Colors.Black);
+            circle.StrokeThickness = 1;
+            circle.Fill = ball.TargetColor;
+            return circle;
+        }
+
+        void BallModelsListener.handleBallRemoved(BallModel ball)
+        {
+            int id = ball.ID;
+            Ellipse ellipse = balls[id];
+            balls.Remove(id);
+            MainCanvas.Children.Remove(ellipse);
+        }
+        void BallModelListener.handleBallModelChanged(BallModel ball)
+        {
+            int id = ball.ID;
+            Ellipse ellipse = balls[id];
+            if (ellipse != null)
+            {
+                ellipse.Height = ball.R * 2;
+                ellipse.Width = ball.R * 2;
+                Canvas.SetLeft(ellipse, ball.X);
+                Canvas.SetTop(ellipse, ball.Y);
+                Canvas.SetZIndex(ellipse, 100);
+            }
         }
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
@@ -65,7 +103,7 @@ namespace SkeletalTracking
             InitTargets();
             i = 0;
         }
-        
+
         private void InitTargets()
         {
             targets.Add(1, new Target(target1, 1));
@@ -85,7 +123,7 @@ namespace SkeletalTracking
         {
             if (Runtime.Kinects.Count == 0)
             {
-                this.Title = "No Kinect connected"; 
+                this.Title = "No Kinect connected";
             }
             else
             {
@@ -114,7 +152,7 @@ namespace SkeletalTracking
 
                 //Open the video stream
                 nui.VideoStream.Open(ImageStreamType.Video, 2, ImageResolution.Resolution640x480, ImageType.Color);
-                
+
                 //Force video to the background
                 Canvas.SetZIndex(image1, -10000);
             }
@@ -123,12 +161,12 @@ namespace SkeletalTracking
         void nui_VideoFrameReady(object sender, ImageFrameReadyEventArgs e)
         {
             //Automagically create BitmapSource for Video
-            image1.Source = e.ImageFrame.ToBitmapSource();            
+            image1.Source = e.ImageFrame.ToBitmapSource();
         }
 
         void nui_SkeletonFrameReady(object sender, SkeletonFrameReadyEventArgs e)
         {
-            
+
             SkeletonFrame allSkeletons = e.SkeletonFrame;
 
             //get the first tracked skeleton
@@ -137,7 +175,7 @@ namespace SkeletalTracking
                                      select s).FirstOrDefault();
 
 
-            if(skeleton != null)
+            if (skeleton != null)
             {
                 //set positions on our joints of interest (already defined as Ellipse objects in the xaml)
                 SetEllipsePosition(headEllipse, skeleton.Joints[JointID.Head]);
@@ -168,15 +206,15 @@ namespace SkeletalTracking
         }
 
         private void SetEllipsePosition(Ellipse ellipse, Joint joint)
-        {    
+        {
             var scaledJoint = joint.ScaleTo(640, 480, k_xMaxJointScale, k_yMaxJointScale);
 
-            Canvas.SetLeft(ellipse, scaledJoint.Position.X - (double)ellipse.GetValue(Canvas.WidthProperty) / 2 );
+            Canvas.SetLeft(ellipse, scaledJoint.Position.X - (double)ellipse.GetValue(Canvas.WidthProperty) / 2);
             Canvas.SetTop(ellipse, scaledJoint.Position.Y - (double)ellipse.GetValue(Canvas.WidthProperty) / 2);
-            Canvas.SetZIndex(ellipse, (int) -Math.Floor(scaledJoint.Position.Z*100));
+            Canvas.SetZIndex(ellipse, (int)-Math.Floor(scaledJoint.Position.Z * 100));
             if (joint.ID == JointID.HandLeft || joint.ID == JointID.HandRight)
-            {   
-                byte val = (byte)(Math.Floor((joint.Position.Z - 0.8)* 255 / 2));
+            {
+                byte val = 0;// (byte)(Math.Floor((joint.Position.Z - 0.8) * 255 / 2));
                 ellipse.Fill = new SolidColorBrush(Color.FromRgb(val, val, val));
             }
         }

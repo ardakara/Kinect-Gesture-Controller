@@ -68,7 +68,9 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="BallModel.cs" />
+    <Compile Include="BallModels.cs" />
     <Compile Include="BallModelListener.cs" />
+    <Compile Include="BallModelsListener.cs" />
     <Compile Include="CustomController1.cs" />
     <Compile Include="CustomController2.cs" />
     <Compile Include="SkeletonController.cs" />
