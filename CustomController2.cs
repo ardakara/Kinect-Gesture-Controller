@@ -52,25 +52,7 @@ namespace SkeletalTracking
                 if (distance(hand.Position.X, hand.Position.Y, cur.getXPosition() + paintcircleRadius/2, cur.getYPosition()+paintcircleRadius/2) <= paintcircleRadius)
                 {
                     byte colorDelta = adjust_background_color(i, hand, cur);
-                    adjust_circle_color(i, colorDelta);
-                        /*case 1: 
-                            background_red += 50; 
-                            targets[i].setTargetColor(Color.FromArgb(alpha, background_red, 0, 0);
-                            break;
-                        case 2: 
-                            background_green += 50; 
-                            targets[i].setTargetColor(Color.FromArgb(alpha, 0, background_green, 0));
-                            break;
-                        case 3: 
-                            background_blue += 50; 
-                            targets[i].setTargetColor(Color.FromArgb(alpha, 0, 0, background_blue));
-                            break;
-                        case 4: 
-                            background_red /= 2; 
-                            background_green /= 2; 
-                            background_blue /= 2; 
-                            targets[i].setTargetColor(Color.FromArgb(alpha, background_red, background_green, background_blue));
-                            break; */
+                    adjust_circle_color(i, 10, cur);
                 }
             }
             return 0;
@@ -81,8 +63,40 @@ namespace SkeletalTracking
             return 0;
         }
 
-        private void adjust_circle_color(int i, byte colorDelta) {
-             
+        private void adjust_circle_color(int i, int colorDelta) {
+            switch (i) {
+                case 1:
+                    background_red = change_color(background_red, colorDelta);
+                    break;
+                case 2:
+                    background_green = change_color(background_green, colorDelta);
+                    break;
+                case 3:
+                    background_blue = change_color(background_blue, colorDelta);
+                    break;
+                case 4: 
+                    scale_brightness(background_red, background_green, background_blue);
+                    break;
+            }
+        }
+
+        private byte change_color(byte orig_color, int extra)
+        {
+            if ((int)orig_color + (int)extra > (int)255)
+            {
+                return 255;
+            }
+            else
+            {
+                return (byte) (orig_color + extra);
+            }
+        }
+
+        private void scale_brightness(byte r, byte g, byte b) 
+        {
+            background_red /= 2;
+            background_green /= 2;
+            background_blue /= 2;
         }
 
         private double distance(double x1, double y1, double x2, double y2)
