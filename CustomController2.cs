@@ -91,6 +91,7 @@ namespace SkeletalTracking
                 return 0;
             }
             double delta_theta = angle - thetas[lr];
+            thetas[lr] = angle;
             if (delta_theta > Math.PI)
             {
                 return 1;
