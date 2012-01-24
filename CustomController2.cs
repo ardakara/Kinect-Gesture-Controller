@@ -25,9 +25,9 @@ namespace SkeletalTracking
 
         public CustomController2(MainWindow win) : base(win)
         {
-            background_red = 255;
-            background_blue = 127;
-            background_green = 127;
+            background_red = 0;
+            background_blue = 0;
+            background_green = 0;
             alpha = 127;
             left_circle_id = -1;
             left_theta = -1;
@@ -45,20 +45,49 @@ namespace SkeletalTracking
         }
 
         private double trackLeftHand(Joint hand, Dictionary<int, Target> targets) {
-            foreach (var target in targets)
+            for (int i = 1; i <= 4; i++)
             {
-                Target cur = target.Value;
-                double handEllipseRadius = 17.5; //hardcoded from MainWindow.xaml
+                Target cur = targets[i];
                 double paintcircleRadius = cur.getTargetRadius();
-                /* if (hand_hit_target(hand, cur))
+                if (distance(hand.Position.X, hand.Position.Y, cur.getXPosition() + paintcircleRadius/2, cur.getYPosition()+paintcircleRadius/2) <= paintcircleRadius)
                 {
-                    target.
-                }*/
-                //we need HEIGHT and WIDTH of hand ellipse AND circle!
-                //otherwise I hard-coded with width of the leftEllipse.... ugh.
-                //cur.getXPosition()
+                    byte colorDelta = adjust_background_color(i, hand, cur);
+                    adjust_circle_color(i, colorDelta);
+                        /*case 1: 
+                            background_red += 50; 
+                            targets[i].setTargetColor(Color.FromArgb(alpha, background_red, 0, 0);
+                            break;
+                        case 2: 
+                            background_green += 50; 
+                            targets[i].setTargetColor(Color.FromArgb(alpha, 0, background_green, 0));
+                            break;
+                        case 3: 
+                            background_blue += 50; 
+                            targets[i].setTargetColor(Color.FromArgb(alpha, 0, 0, background_blue));
+                            break;
+                        case 4: 
+                            background_red /= 2; 
+                            background_green /= 2; 
+                            background_blue /= 2; 
+                            targets[i].setTargetColor(Color.FromArgb(alpha, background_red, background_green, background_blue));
+                            break; */
+                }
             }
-            return -1;
+            return 0;
+        }
+
+        private byte adjust_background_color(int i, Joint hand, Target cur)
+        {
+            return 0;
+        }
+
+        private void adjust_circle_color(int i, byte colorDelta) {
+             
+        }
+
+        private double distance(double x1, double y1, double x2, double y2)
+        {
+            return Math.Sqrt(Math.Pow(Math.Abs(x1 - x2), 2) + Math.Pow(Math.Abs(y1 - y2), 2));
         }
 
         public override void controllerActivated(Dictionary<int, Target> targets)
