@@ -53,7 +53,9 @@ namespace SkeletalTracking
                 {
                     inCircle = true;
                     int change = increaseOrDecrease(hand, lr, cur);
-                    adjust_circle_color(i, change);
+                    Console.WriteLine(change);
+                    adjust_circle_color(i, change, cur);
+                    targets[5].setTargetColor(Color.FromArgb(alpha, background_red, background_green, background_blue));
                 }
             }
             if (!inCircle)
@@ -67,23 +69,16 @@ namespace SkeletalTracking
         private int increaseOrDecrease(Joint hand, int lr, Target cur)
         {
             double deltaX = hand.Position.X - cur.getXPosition();
-            double deltaY = hand.Position.Y - cur.getYPosition();
-            double angle = Math.Asin(deltaY / deltaX);
+            double deltaY = - (hand.Position.Y - cur.getYPosition());
+            double angle = Math.Atan(deltaY/deltaX);
+
             if (deltaX < 0)
             {
-                if (deltaY > 0)
-                {
-                    angle += Math.PI;
-                }
-                else
-                {
-                    angle -= Math.PI;
-
-                }
+                angle += Math.PI;
             }
             if (angle < 0)
             {
-                angle += Math.PI;
+                angle += (2*Math.PI);
             }
             if (thetas[lr] == -1)
             {
@@ -91,6 +86,7 @@ namespace SkeletalTracking
                 return 0;
             }
             double delta_theta = angle - thetas[lr];
+            Console.Write("delta theta = " + delta_theta + " change = ");
             thetas[lr] = angle;
             if (delta_theta > Math.PI)
             {
@@ -110,25 +106,28 @@ namespace SkeletalTracking
             }
         }
 
-        private void adjust_circle_color(int i, int change) {
+        private void adjust_circle_color(int i, int change, Target cur) {
             int colorDelta;
             if (change < 0)
             {
-                colorDelta = -10;
+                colorDelta = -2;
             }
             else
             {
-                colorDelta = 10;
+                colorDelta = 2;
             }
             switch (i) {
                 case 1:
                     background_red = change_color(background_red, colorDelta);
+                    cur.setTargetColor(Color.FromArgb(alpha, background_red, 0, 0));
                     break;
                 case 2:
                     background_green = change_color(background_green, colorDelta);
+                    cur.setTargetColor(Color.FromArgb(alpha, 0, background_green, 0));
                     break;
                 case 3:
                     background_blue = change_color(background_blue, colorDelta);
+                    cur.setTargetColor(Color.FromArgb(alpha, 0, 0, background_blue));
                     break;
                 case 4: 
                     scale_brightness();
