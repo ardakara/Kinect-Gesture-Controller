@@ -19,9 +19,8 @@ namespace SkeletalTracking
         byte background_green;
         byte alpha;
         int left_circle_id;
-        double left_theta;
+        double[] thetas;
         int right_circle_id;
-        double right_theta;
 
         public CustomController2(MainWindow win) : base(win)
         {
@@ -30,9 +29,8 @@ namespace SkeletalTracking
             background_green = 0;
             alpha = 127;
             left_circle_id = -1;
-            left_theta = -1;
+            thetas = new double[] { -1, -1 };
             right_circle_id = -1;
-            right_theta = -1;
         }
 
         public override void processSkeletonFrame(SkeletonData skeleton, Dictionary<int, Target> targets)
@@ -41,29 +39,86 @@ namespace SkeletalTracking
             Joint leftHand = skeleton.Joints[JointID.HandLeft].ScaleTo(640, 480, window.k_xMaxJointScale, window.k_yMaxJointScale);
             Joint rightHand = skeleton.Joints[JointID.HandRight].ScaleTo(640, 480, window.k_xMaxJointScale, window.k_yMaxJointScale);
 
-            trackLeftHand(leftHand, targets);
+            trackHand(leftHand, 0, targets);
+            trackHand(rightHand, 1, targets);
         }
 
-        private double trackLeftHand(Joint hand, Dictionary<int, Target> targets) {
+        private double trackHand(Joint hand, int lr, Dictionary<int, Target> targets) {
+            bool inCircle = false;
             for (int i = 1; i <= 4; i++)
             {
                 Target cur = targets[i];
                 double paintcircleRadius = cur.getTargetRadius();
-                if (distance(hand.Position.X, hand.Position.Y, cur.getXPosition() + paintcircleRadius/2, cur.getYPosition()+paintcircleRadius/2) <= paintcircleRadius)
+                if (distance(hand.Position.X, hand.Position.Y, cur.getXPosition() + paintcircleRadius / 2, cur.getYPosition() + paintcircleRadius / 2) <= paintcircleRadius)
                 {
-                    byte colorDelta = adjust_background_color(i, hand, cur);
-                    adjust_circle_color(i, 10, cur);
+                    inCircle = true;
+                    int change = increaseOrDecrease(hand, lr, cur);
+                    adjust_circle_color(i, change);
                 }
             }
+            if (!inCircle)
+            {
+                thetas[lr] = -1;
+            }
+
             return 0;
         }
 
-        private byte adjust_background_color(int i, Joint hand, Target cur)
+        private int increaseOrDecrease(Joint hand, int lr, Target cur)
         {
-            return 0;
+            double deltaX = hand.Position.X - cur.getXPosition();
+            double deltaY = hand.Position.Y - cur.getYPosition();
+            double angle = Math.Asin(deltaY / deltaX);
+            if (deltaX < 0)
+            {
+                if (deltaY > 0)
+                {
+                    angle += Math.PI;
+                }
+                else
+                {
+                    angle -= Math.PI;
+
+                }
+            }
+            if (angle < 0)
+            {
+                angle += Math.PI;
+            }
+            if (thetas[lr] == -1)
+            {
+                thetas[lr] = angle;
+                return 0;
+            }
+            double delta_theta = angle - thetas[lr];
+            if (delta_theta > Math.PI)
+            {
+                return 1;
+            }
+            if (delta_theta < -1 * Math.PI)
+            {
+                return -1;
+            }
+            if (delta_theta > 0)
+            {
+                return -1;
+            }
+            else
+            {
+                return 1;
+            }
         }
 
-        private void adjust_circle_color(int i, int colorDelta) {
+        private void adjust_circle_color(int i, int change) {
+            int colorDelta;
+            if (change < 0)
+            {
+                colorDelta = -10;
+            }
+            else
+            {
+                colorDelta = 10;
+            }
             switch (i) {
                 case 1:
                     background_red = change_color(background_red, colorDelta);
@@ -75,24 +130,27 @@ namespace SkeletalTracking
                     background_blue = change_color(background_blue, colorDelta);
                     break;
                 case 4: 
-                    scale_brightness(background_red, background_green, background_blue);
+                    scale_brightness();
                     break;
             }
         }
 
-        private byte change_color(byte orig_color, int extra)
+        private byte change_color(byte orig_color, int colorDelta)
         {
-            if ((int)orig_color + (int)extra > (int)255)
+            if ((int)orig_color + colorDelta > (int)255)
             {
                 return 255;
+            } else if ((int)orig_color + colorDelta < (int)0)
+            {
+                return 0;
             }
             else
             {
-                return (byte) (orig_color + extra);
+                return (byte)(orig_color + colorDelta);
             }
         }
 
-        private void scale_brightness(byte r, byte g, byte b) 
+        private void scale_brightness()
         {
             background_red /= 2;
             background_green /= 2;
