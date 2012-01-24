@@ -251,6 +251,11 @@ namespace SkeletalTracking
             }
 
         }
+
+        private void image1_ImageFailed(object sender, ExceptionRoutedEventArgs e)
+        {
+
+        }
     }
 
 

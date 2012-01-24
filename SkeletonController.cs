@@ -66,11 +66,9 @@ namespace SkeletalTracking
         //initialization that you don't want to repeat with each new skeleton frame. You may also 
         //directly move the targets in the MainWindow.xaml file to achieve the same initial repositioning.
         public virtual void controllerActivated(Dictionary<int, Target> targets){
-            //targets[1].setTargetPosition(80, 200);
-            //targets[2].hideTarget();
-            //targets[2].showTarget();
-            //targets[5].isHidden();
-            //targets[3].setTargetHighlighted();           
+            for (int i = 1; i <=4; i++) {
+                targets[i].setTargetColor(Colors.Red);   
+            }       
         }
 
         //The default value that gets passed to MaxSkeletonX and MaxSkeletonY in the Coding4Fun Joint.ScaleTo function is 1.5f
@@ -90,7 +88,6 @@ namespace SkeletalTracking
 
         private Brush _target_color;
         private TextBlock _canvasEl;
-        
 
         public Target(TextBlock target, int givenID)
         {
@@ -99,6 +96,11 @@ namespace SkeletalTracking
             id = givenID;
             showTarget();
         }
+
+        public double getTargetRadius() {
+            return (double)_canvasEl.GetValue(Canvas.WidthProperty) / 2;
+        }
+
         public void setTargetPosition(double x, double y)
         {
             _canvasEl.SetValue(Canvas.LeftProperty, x);
@@ -121,6 +123,12 @@ namespace SkeletalTracking
         {
             _target_color = new SolidColorBrush(Colors.Red);
             _canvasEl.Background = new VisualBrush(generateEllipse((double)_canvasEl.GetValue(Canvas.WidthProperty) / 2, _target_color)); 
+        }
+
+        public void setTargetColor(Color color)
+        {
+            _target_color = new SolidColorBrush(color);
+            _canvasEl.Background = new VisualBrush(generateEllipse((double)_canvasEl.GetValue(Canvas.WidthProperty) / 2, _target_color));
         }
 
         public void hideTarget()

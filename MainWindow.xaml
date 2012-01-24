@@ -3,7 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Title="MainWindow" Height="480" Width="640" Closed="Window_Closed" Loaded="Window_Loaded" KeyDown="Window_KeyDown">
     <Canvas Name="MainCanvas" Height="480" Width="640">
-        <Image Opacity="0.1" Canvas.Left="0" Canvas.Top="0" Height="480 " Name="image1" Stretch="Fill" Width="640" />
+        <Image Opacity="0.1" Canvas.Left="0" Canvas.Top="0" Height="480 " Name="image1" Stretch="Fill" Width="640" ImageFailed="image1_ImageFailed" />
         <Ellipse Canvas.Left="270" Canvas.Top="126" Height="50" Name="headEllipse" Stroke="Black" Width="50" Fill="Orange" />
         <Ellipse Canvas.Left="384" Canvas.Top="253" Height="35" Name="rightEllipse" Stroke="Black" Width="35" Fill="Blue" />
         <Ellipse Canvas.Left="158" Canvas.Top="253" Fill="Blue" Height="35" Name="leftEllipse" Stroke="Black" Width="35" />
@@ -22,9 +22,9 @@
         <Ellipse Canvas.Left="304" Canvas.Top="319" Fill="Bisque" Height="16" Name="kneeRight" Stroke="Black" Width="16" />
         <Ellipse Canvas.Left="282" Canvas.Top="253" Fill="BlueViolet" Height="16" Name="hipCenter" Stroke="Black" Width="16" />
         <TextBlock Name="target1" Text="R"
-           Height="75"
-           Width="75"
-           Padding="27,10,0,0" Canvas.Left="23" Canvas.Top="220" FontSize="40">
+           Height="100"
+           Width="100"
+           Padding="37,22,0,0" Canvas.Left="140" Canvas.Top="99" FontSize="40">
           <TextBlock.Background>
             <VisualBrush>
               <VisualBrush.Visual>
@@ -36,9 +36,9 @@
           </TextBlock.Background>
         </TextBlock>
         <TextBlock Name="target2" Text="G"
-           Height="75"
-           Width="75"
-           Padding="27,10,0,0" Canvas.Left="111" Canvas.Top="96" FontSize="40">
+           Height="100"
+           Width="100"
+           Padding="35,21,0,0" Canvas.Left="344" Canvas.Top="100" FontSize="40">
           <TextBlock.Background>
             <VisualBrush>
               <VisualBrush.Visual>
@@ -49,24 +49,10 @@
             </VisualBrush>
           </TextBlock.Background>
         </TextBlock>
-        <TextBlock Name="target3" Text="Dance Floor"
-           Height="75"
-           Width="175"
-           Padding="27,10,0,0" Canvas.Left="212" Canvas.Top="33" FontSize="20">
-          <TextBlock.Background>
-            <VisualBrush>
-              <VisualBrush.Visual>
-                 <Rectangle Height="65"
-                          Width="65"
-                          Fill="#FFFFFF" Stroke="Black" />
-              </VisualBrush.Visual>
-            </VisualBrush>
-          </TextBlock.Background>
-        </TextBlock>
-        <TextBlock Name="target4" Text="B"
-           Height="75"
-           Width="75"
-           Padding="27,10,0,0" Canvas.Left="409" Canvas.Top="96" FontSize="40">
+        <TextBlock Name="target3" Text="B"
+           Height="100"
+           Width="100"
+           Padding="37,22,0,0" Canvas.Left="344" Canvas.Top="235" FontSize="40">
           <TextBlock.Background>
             <VisualBrush>
               <VisualBrush.Visual>
@@ -77,16 +63,30 @@
             </VisualBrush>
           </TextBlock.Background>
         </TextBlock>
-        <TextBlock Name="target5" Text=" "
-           Height="75"
-           Width="75"
-           Padding="27,10,0,0" Canvas.Left="505" Canvas.Top="220" FontSize="40">
+        <TextBlock Name="target4" Text="Brightness"
+           Height="100"
+           Width="100"
+           Padding="17,40,0,0" Canvas.Left="140" Canvas.Top="235" FontSize="15">
           <TextBlock.Background>
             <VisualBrush>
               <VisualBrush.Visual>
                  <Ellipse Height="65"
                           Width="65"
                           Fill="#888888" Stroke="Black" />
+              </VisualBrush.Visual>
+            </VisualBrush>
+          </TextBlock.Background>
+        </TextBlock>
+        <TextBlock Name="target5" Text="Dance Floor"
+           Height="52"
+           Width="570"
+           Padding="210,10,0,0" Canvas.Left="31" Canvas.Top="23" FontSize="20">
+          <TextBlock.Background>
+            <VisualBrush>
+              <VisualBrush.Visual>
+                 <Rectangle Height="65"
+                          Width="65"
+                          Fill="#FFFFFF" Stroke="Black" />
               </VisualBrush.Visual>
             </VisualBrush>
           </TextBlock.Background>
