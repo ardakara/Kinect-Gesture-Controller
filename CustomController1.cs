@@ -106,6 +106,15 @@ namespace SkeletalTracking
 
         private void handleTargetIntersected(Target t, double value)
         {
+            int currentValue = Convert.ToInt16(t.getTargetText());
+            currentValue += (int)value;
+
+            if (currentValue >= 100)
+            {
+                currentValue = 100;
+                t.setTargetSelected();
+            }
+            t.setTargetText(currentValue.ToString());
         }
         private double computeGrownRadius(double currentR)
         {
@@ -121,15 +130,23 @@ namespace SkeletalTracking
         {
             targets[1].setTargetPosition(0, 0);
             targets[1].setTargetText("0");
+            targets[1].setTargetUnselected();
+            targets[1].setFontSize(40);
 
             targets[2].setTargetPosition(524, 0);
             targets[2].setTargetText("0");
+            targets[2].setTargetUnselected();
+            targets[2].setFontSize(40);
 
             targets[3].setTargetPosition(0, 342);
             targets[3].setTargetText("0");
+            targets[3].setTargetUnselected();
+            targets[3].setFontSize(40);
 
             targets[4].setTargetPosition(524, 342);
             targets[4].setTargetText("0");
+            targets[4].setTargetUnselected();
+            targets[4].setFontSize(40);
 
             targets[5].hideTarget();
         }
