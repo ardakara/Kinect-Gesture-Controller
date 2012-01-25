@@ -49,7 +49,6 @@ namespace SkeletalTracking
         {
             
             byte byte_val = (byte)((int)(d * 255));
-            Console.WriteLine("d: " + d + "byte: " + byte_val);
             return byte_val;
         }
 
@@ -63,7 +62,6 @@ namespace SkeletalTracking
                 {
                     inCircle = true;
                     int change = increaseOrDecrease(hand, lr, cur);
-                    Console.WriteLine(change);
                     adjust_circles_color(i, change, targets);
                     targets[5].setTargetColor(Color.FromArgb(doubleToByte(argb[0]), doubleToByte(argb[1]), doubleToByte(argb[2]), doubleToByte(argb[3])));
                 }
@@ -96,7 +94,6 @@ namespace SkeletalTracking
                 return 0;
             }
             double delta_theta = angle - thetas[lr];
-            Console.Write("delta theta = " + delta_theta + " change = ");
             thetas[lr] = angle;
             if (delta_theta > Math.PI)
             {
@@ -127,6 +124,7 @@ namespace SkeletalTracking
             {
                 colorDelta = 0.01;
             }
+
             switch (i) {
                 case 1:
                     argb[i] = change_color(argb, i, colorDelta);
@@ -147,17 +145,26 @@ namespace SkeletalTracking
                     targets[3].setTargetColor(Color.FromArgb(doubleToByte(argb[0]), 0, 0, doubleToByte(argb[3])));
                     break;
             }
-            RGBtoHSV(hsv, argb[1], argb[2], argb[3]);
-            HSVtoRGB(bright_rgb, hsv[1], 0, hsv[2]);
-            targets[4].setTargetColor(Color.FromArgb(doubleToByte(argb[0]), doubleToByte(bright_rgb[1]), doubleToByte(bright_rgb[2]), doubleToByte(bright_rgb[3])));
+            byte grayScaleVal = doubleToByte(0.2989 * argb[1] + 0.5870 * argb[2] + 0.1140 * argb[3]);
+            targets[4].setTargetColor(Color.FromArgb(doubleToByte(argb[0]), grayScaleVal, grayScaleVal, grayScaleVal));
         }
 
         private void scale_brightness(double colorDelta)
         {
-            RGBtoHSV(hsv, argb[1], argb[2], argb[3]);
-            hsv[2] = change_color(hsv, 2, colorDelta);
-            HSVtoRGB(argb, hsv[0], hsv[1], hsv[2]);
+            double maxVal = Math.Max(argb[1], Math.Max(argb[2], argb[3]));
+
+            double target = maxVal + colorDelta;
+            if (target > 1.0) target = 1;
+            if (target < 0.001) target = 0.001;
+
+            for (int i = 1; i < 4; i++)
+            {
+                argb[i] = Math.Round(argb[i] * target / maxVal, 10);
+                Console.Write(argb[i] + "\t");
+            }
+            Console.WriteLine();
         }
+
 
         private double change_color(double[] array, int i, double colorDelta)
         {
@@ -165,9 +172,9 @@ namespace SkeletalTracking
             {
                 return 1;
             }
-            else if (array[i] + colorDelta < 0)
+            else if (array[i] + colorDelta < 0.001)
             {
-                return 0;
+                return 0.001;
             }
             else
             {
@@ -175,97 +182,6 @@ namespace SkeletalTracking
             }
         }
 
-
-        private void RGBtoHSV(double[] hsv, double r, double g, double b)
-        {
-            double min, max, delta;
-            min = Math.Min( Math.Min(r, g), Math.Min(g, b));
-            max = Math.Max(Math.Max(r, g), Math.Max(g, b));
-            delta = max - min;
-
-            hsv[2] = max; //set v
-            if (max != 0)
-            {
-                hsv[1]= delta / max; //set s
-            }
-            else
-            {
-                hsv[1] = 0;
-                hsv[0] = -1;
-                return;
-            }
-
-            if (r == max)
-            {
-                hsv[0] = (g - b) / delta;
-            }
-            else if (g == max)
-            {
-                hsv[0] = 2 + (b - r) / delta;
-            }
-            else
-            {
-                hsv[0] = 4 + (r - g) / delta;
-            }
-
-            hsv[0] *= 60;
-            if (hsv[0] < 0) {
-                hsv[0] += 360;
-            }
-
-        }
-
-        private void HSVtoRGB(double[] argb, double h, double s, double v)
-        {
-            int i;
-            double f, p, q, t;
-            if (s == 0) //achromatic (grey)
-            {
-                argb[1] = argb[2] = argb[3] = v;
-                return;
-            }
-
-            h /= 60;
-            i = (int) Math.Floor(h);
-            f = h - i;
-            p = v * (1 - s);
-            q = v * (1 - s * f);
-            t = v * (1 - s * (1 - f));
-
-            switch (i)
-            {
-                case 0:
-                    argb[1] = v;
-                    argb[2] = t;
-                    argb[3] = p;
-                    break;
-                case 1:
-                    argb[1] = q;
-                    argb[2] = v;
-                    argb[3] = p;
-                    break;
-                case 2:
-                    argb[1] = p;
-                    argb[2] = v;
-                    argb[3] = t;
-                    break;
-                case 3:
-                    argb[1] = p;
-                    argb[2] = q;
-                    argb[3] = v;
-                    break;
-                case 4:
-                    argb[1] = t;
-                    argb[2] = p;
-                    argb[3] = v;
-                    break;
-                default:
-                    argb[1] = v;
-                    argb[2] = p;
-                    argb[3] = q;
-                    break;
-            }
-        }
         private double distance(double x1, double y1, double x2, double y2)
         {
             return Math.Sqrt(Math.Pow(Math.Abs(x1 - x2), 2) + Math.Pow(Math.Abs(y1 - y2), 2));
@@ -279,6 +195,12 @@ namespace SkeletalTracking
             targets[3].setTargetColor(Color.FromArgb(127, 0, 0, doubleToByte(argb[3])));
             targets[4].setTargetColor(Color.FromArgb(127, 127, 127, 127));
             targets[5].setTargetColor(Color.FromArgb(127, doubleToByte(argb[1]), doubleToByte(argb[2]), doubleToByte(argb[3]) ));
+
+            targets[1].setTargetPosition(140, 114);
+            targets[2].setTargetPosition(245, 58);
+            targets[3].setTargetPosition(351, 114);
+            targets[4].setTargetPosition(245, 220);
+            targets[5].setTargetPosition(27, 390);
         }
     }
 
