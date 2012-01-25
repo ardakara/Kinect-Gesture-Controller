@@ -195,6 +195,7 @@ namespace SkeletalTracking
 
         public override void controllerActivated(Dictionary<int, Target> targets)
         {
+            targets[5].showTarget();
             //1 is RED, 2 is GREEN, 3 is BLUE, 4 is BRIGHTNESS
             targets[1].setTargetColor(Color.FromArgb(127, doubleToByte(argb[1]), 0, 0));
             targets[2].setTargetColor(Color.FromArgb(127, 0, doubleToByte(argb[2]), 0));
@@ -210,7 +211,7 @@ namespace SkeletalTracking
             targets[1].setTargetPosition(140, 114);
             targets[2].setTargetPosition(245, 58);
             targets[3].setTargetPosition(351, 114);
-            targets[4].setTargetPosition(245, 220);
+            targets[4].setTargetPosition(245, 180);
             targets[5].setTargetPosition(27, 390);
         }
     }
