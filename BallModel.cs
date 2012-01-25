@@ -11,6 +11,17 @@ namespace SkeletalTracking
 {
     class BallModel
     {
+
+        public static double MAX_V = 2;
+        public static double MIN_V = 8;
+        public static double MAX_R = 40;
+
+
+        public static double MIN_R = 10;
+        public static double MIN_VALUE = 1;
+        public static double MAX_VALUE = 10;
+
+
         private int _id;
         public int ID
         {
@@ -45,7 +56,20 @@ namespace SkeletalTracking
                 _angle = value;
             }
         }
-
+        private double _value;
+        public double Value
+        {
+            get
+            {
+                return _value;
+            }
+            set
+            {
+                _value = value;
+                _r = convertValueToRadius(value);
+                this.fireBallModelChanged();
+            }
+        }
         private double _x;
         public double X
         {
@@ -84,6 +108,7 @@ namespace SkeletalTracking
             set
             {
                 this._r = value;
+                this._value = convertRadiusToValue(value);
                 this.fireBallModelChanged();
             }
         }
@@ -106,6 +131,19 @@ namespace SkeletalTracking
             {
                 return _targetColor;
             }
+        }
+
+        private static double convertRadiusToValue(double radius)
+        {
+            double percentMax = (radius - MIN_R) / (MAX_R - MIN_R);
+            double value = MIN_VALUE + percentMax * (MAX_VALUE - MIN_VALUE);
+            return value;
+        }
+        private static double convertValueToRadius(double value)
+        {
+            double percentMax = (value - MIN_VALUE) / (MAX_VALUE - MIN_VALUE);
+            double radius = MIN_R + percentMax * (MAX_R - MIN_R);
+            return radius;
         }
         private List<BallModelListener> _listeners = new List<BallModelListener>();
         public BallModel(int id, double x, double y, double r, double angle, double velocity)
@@ -141,7 +179,7 @@ namespace SkeletalTracking
             this.X = x;
             this.Y = y;
         }
-       
+
 
     }
 }
