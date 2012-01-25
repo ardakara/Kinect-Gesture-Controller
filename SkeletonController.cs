@@ -131,7 +131,17 @@ namespace SkeletalTracking
             _canvasEl.Background = new VisualBrush(generateEllipse((double)_canvasEl.GetValue(Canvas.WidthProperty) / 2, _target_color));
         }
 
-        public void setTargetText(String text)
+        public void setFontSize(int size)
+        {
+            _canvasEl.FontSize = size;
+        }
+
+        public string getTargetText()
+        {
+            return _canvasEl.Text;
+        }
+
+        public void setTargetText(string text)
         {
             _canvasEl.Text = text;
         }
