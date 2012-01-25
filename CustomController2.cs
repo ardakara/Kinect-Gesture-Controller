@@ -59,7 +59,7 @@ namespace SkeletalTracking
                     inCircle = true;
                     int change = increaseOrDecrease(hand, lr, cur);
                     adjust_circles_color(i, change, targets);
-                    targets[5].setTargetColor(Color.FromArgb(doubleToByte(argb[0]), doubleToByte(argb[1]), doubleToByte(argb[2]), doubleToByte(argb[3])));
+                    targets[5].setTargetColor(Color.FromArgb(255, doubleToByte(argb[1]), doubleToByte(argb[2]), doubleToByte(argb[3])));
                 }
             }
             if (!inCircle)
@@ -150,13 +150,9 @@ namespace SkeletalTracking
         private void scale_brightness(double colorDelta)
         {
             double val = 0;
-            if (colorDelta > 0)
+            if (colorDelta !=0)
             {
                 val = Math.Max(argb[1], Math.Max(argb[2], argb[3]));
-            }
-            else
-            {
-                val = Math.Min(argb[1], Math.Min(argb[2], argb[3]));
             }
 
             double target = val + colorDelta;
@@ -195,22 +191,23 @@ namespace SkeletalTracking
 
         public override void controllerActivated(Dictionary<int, Target> targets)
         {
+            targets[5].showTarget();
             //1 is RED, 2 is GREEN, 3 is BLUE, 4 is BRIGHTNESS
             targets[1].setTargetColor(Color.FromArgb(127, doubleToByte(argb[1]), 0, 0));
             targets[2].setTargetColor(Color.FromArgb(127, 0, doubleToByte(argb[2]), 0));
             targets[3].setTargetColor(Color.FromArgb(127, 0, 0, doubleToByte(argb[3])));
             targets[4].setTargetColor(Color.FromArgb(127, 127, 127, 127));
-            targets[5].setTargetColor(Color.FromArgb(127, doubleToByte(argb[1]), doubleToByte(argb[2]), doubleToByte(argb[3]) ));
+            targets[5].setTargetColor(Color.FromArgb(255, doubleToByte(argb[1]), doubleToByte(argb[2]), doubleToByte(argb[3]) ));
 /*
             for (int i = 1; i <= 5; i++)
             {
                 targets[i].setTargetRadius(50.0);
             }
 */
-            targets[1].setTargetPosition(140, 114);
-            targets[2].setTargetPosition(245, 58);
-            targets[3].setTargetPosition(351, 114);
-            targets[4].setTargetPosition(245, 220);
+            targets[1].setTargetPosition(140, 170);
+            targets[2].setTargetPosition(180, 58);
+            targets[3].setTargetPosition(311, 58);
+            targets[4].setTargetPosition(351, 170);
             targets[5].setTargetPosition(27, 390);
         }
     }

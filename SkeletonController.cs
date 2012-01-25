@@ -131,6 +131,11 @@ namespace SkeletalTracking
             _canvasEl.Background = new VisualBrush(generateEllipse((double)_canvasEl.GetValue(Canvas.WidthProperty) / 2, _target_color));
         }
 
+        public void setTargetText(String text)
+        {
+            _canvasEl.Text = text;
+        }
+
         public void hideTarget()
         {
             _canvasEl.Visibility = Visibility.Hidden;
