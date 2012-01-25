@@ -5,7 +5,7 @@ using System.Text;
 
 namespace SkeletalTracking
 {
-
+    public delegate void ProcessTargetIntersectedDelegate(Target target,double value);
     class BallModels
     {
         private MainWindow _window;
@@ -21,7 +21,7 @@ namespace SkeletalTracking
 
         public void clear()
         {
-            
+
             foreach (BallModel ball in this._balls.Values)
             {
                 this.fireBallModelRemoved(ball);
@@ -146,7 +146,7 @@ namespace SkeletalTracking
 
         }
 
-        public void removeIntersectingBalls(Dictionary<int, Target> targets)
+        public void removeIntersectingBalls(Dictionary<int, Target> targets, ProcessTargetIntersectedDelegate processIntersectedTarget)
         {
             List<BallModel> removed = new List<BallModel>();
             foreach (BallModel ball in this._balls.Values)
@@ -155,6 +155,8 @@ namespace SkeletalTracking
                 {
                     if (ball.Velocity > 0 && ballIntersectsTarget(ball, target))
                     {
+
+                        processIntersectedTarget(target,ball.R);
                         removed.Add(ball);
 
                         break;
@@ -163,6 +165,7 @@ namespace SkeletalTracking
             }
             foreach (BallModel ball in removed)
             {
+
                 this.removeBall(ball);
             }
 
