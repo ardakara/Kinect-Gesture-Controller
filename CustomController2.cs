@@ -208,10 +208,10 @@ namespace SkeletalTracking
                 targets[i].setTargetRadius(50.0);
             }
 */
-            targets[1].setTargetPosition(140, 114);
-            targets[2].setTargetPosition(245, 58);
-            targets[3].setTargetPosition(351, 114);
-            targets[4].setTargetPosition(245, 180);
+            targets[1].setTargetPosition(140, 170);
+            targets[2].setTargetPosition(180, 58);
+            targets[3].setTargetPosition(311, 58);
+            targets[4].setTargetPosition(351, 170);
             targets[5].setTargetPosition(27, 390);
         }
     }
