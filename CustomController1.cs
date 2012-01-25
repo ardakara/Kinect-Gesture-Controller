@@ -23,39 +23,28 @@ namespace SkeletalTracking
 
         public override void processSkeletonFrame(SkeletonData skeleton, Dictionary<int, Target> targets)
         {
-
-            /* YOUR CODE HERE*/
+            // x,y launch angle, 
             if (areWristsTogether(skeleton) &&
-                isCloseToBody(skeleton))
+                isCloseToBody(skeleton))            // charging
             {
-                targets[1].setTargetSelected();
+                // here is where we should put a non-moving ball at X,Y
+                double[] ballCoords = getJointForBall(skeleton);
+                double ballX = ballCoords[0];
+                double ballY = ballCoords[1];
             }
-            else
-            {
-                targets[1].setTargetUnselected();
-            }
-
-            if (areArmsStraight(skeleton) &&
+            else if (areArmsStraight(skeleton) &&
                 areWristsTogether(skeleton) &&
-                !isCloseToBody(skeleton))
+                !isCloseToBody(skeleton))           // launching
             {
-                targets[2].setTargetSelected();
             }
-            else
+            else if (areWristsTogether(skeleton))   // moving around
             {
-                targets[2].setTargetUnselected();
             }
-            
-            if (areWristsTogether(skeleton))
+            else                                    // no ball / cancel
             {
-                targets[5].setTargetSelected();
+                // if there is a curball cancel it
+                // if no ball, keep having no ball
             }
-            else
-            {
-                targets[5].setTargetUnselected();
-            }
-
-
         }
 
         public override void controllerActivated(Dictionary<int, Target> targets)
@@ -142,6 +131,19 @@ namespace SkeletalTracking
         private double getDistance(double x, double y, double z)
         {
             return Math.Sqrt(Math.Pow(x, 2) + Math.Pow(y, 2) + Math.Pow(z, 2));
+        }
+
+        private double[] getJointForBall(SkeletonData skeleton)
+        {
+            Joint rightHand = skeleton.Joints[JointID.HandRight].ScaleTo(640, 480, window.k_xMaxJointScale, window.k_yMaxJointScale);
+            Joint leftHand = skeleton.Joints[JointID.HandLeft].ScaleTo(640, 480, window.k_xMaxJointScale, window.k_yMaxJointScale);
+
+
+            double[] ballCoords = new double[2];
+            ballCoords[0] = (rightHand.Position.X + leftHand.Position.X) / 2.0;
+            ballCoords[1] = (rightHand.Position.Y + leftHand.Position.Y) / 2.0;
+
+            return ballCoords;
         }
     }
 }
