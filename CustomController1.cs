@@ -120,9 +120,17 @@ namespace SkeletalTracking
         public override void controllerActivated(Dictionary<int, Target> targets)
         {
             targets[1].setTargetPosition(0, 0);
+            targets[1].setTargetText("0");
+
             targets[2].setTargetPosition(524, 0);
+            targets[2].setTargetText("0");
+
             targets[3].setTargetPosition(0, 342);
+            targets[3].setTargetText("0");
+
             targets[4].setTargetPosition(524, 342);
+            targets[4].setTargetText("0");
+
             targets[5].hideTarget();
         }
 
