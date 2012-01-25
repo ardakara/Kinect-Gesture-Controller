@@ -156,7 +156,7 @@ namespace SkeletalTracking
                     if (ball.Velocity > 0 && ballIntersectsTarget(ball, target))
                     {
 
-                        processIntersectedTarget(target,ball.R);
+                        processIntersectedTarget(target,ball.Value);
                         removed.Add(ball);
 
                         break;

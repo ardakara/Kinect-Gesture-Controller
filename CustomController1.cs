@@ -13,10 +13,7 @@ namespace SkeletalTracking
 {
     class CustomController1 : SkeletonController
     {
-        private static double BALL_V = 8;
-        private static double MAX_R = 40;
         private static double R_GROWN_PER_FRAME = 0.3;
-        private static double MIN_R = 20;
         private BallModels _balls;
         private BallModel curBall = null;
         public CustomController1(MainWindow win)
@@ -41,13 +38,13 @@ namespace SkeletalTracking
 
                 double ballX = ballCoords[0];
                 double ballY = ballCoords[1];
-                double ballR = MIN_R;
+                double ballR = BallModel.MIN_R;
                 if (curBall == null)
                 {
 
                     ballX -= ballR;
                     ballY -= ballR;
-                    curBall = _balls.createBall(ballX, ballY, MIN_R);
+                    curBall = _balls.createBall(ballX, ballY, ballR);
                 }
                 else
                 {
@@ -65,7 +62,7 @@ namespace SkeletalTracking
                 // get angle
 
                 double angle = computeLaunchAngle(skeleton);
-                double velocity = BALL_V;
+                double velocity = BallModel.MAX_V;
                 if (curBall != null)
                 {
                     curBall.Velocity = velocity;
@@ -110,9 +107,9 @@ namespace SkeletalTracking
         private double computeGrownRadius(double currentR)
         {
             double grownR = currentR + R_GROWN_PER_FRAME;
-            if (grownR >= MAX_R)
+            if (grownR >= BallModel.MAX_R)
             {
-                grownR = MAX_R;
+                grownR = BallModel.MAX_R;
             }
             return grownR;
         }
