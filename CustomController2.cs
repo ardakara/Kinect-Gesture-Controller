@@ -150,13 +150,9 @@ namespace SkeletalTracking
         private void scale_brightness(double colorDelta)
         {
             double val = 0;
-            if (colorDelta > 0)
+            if (colorDelta !=0)
             {
                 val = Math.Max(argb[1], Math.Max(argb[2], argb[3]));
-            }
-            else
-            {
-                val = Math.Min(argb[1], Math.Min(argb[2], argb[3]));
             }
 
             double target = val + colorDelta;
