@@ -13,6 +13,10 @@ namespace SkeletalTracking
 {
     class CustomController1 : SkeletonController
     {
+        private static double BALL_V = 8;
+        private static double MAX_R = 40;
+        private static double R_GROWN_PER_FRAME = 0.3;
+        private static double MIN_R = 20;
         private BallModels _balls;
         private BallModel curBall = null;
         public CustomController1(MainWindow win)
@@ -29,26 +33,91 @@ namespace SkeletalTracking
             {
                 // here is where we should put a non-moving ball at X,Y
                 double[] ballCoords = getJointForBall(skeleton);
+
                 double ballX = ballCoords[0];
                 double ballY = ballCoords[1];
+                double ballR = MIN_R;
+                if (curBall == null)
+                {
+
+                    ballX -= ballR;
+                    ballY -= ballR;
+                    curBall = _balls.createBall(ballX, ballY, MIN_R);
+                }
+                else
+                {
+                    ballR = computeGrownRadius(curBall.R);
+                    ballX -= ballR;
+                    ballY -= ballR;
+                    curBall.setPosition(ballX, ballY);
+                    curBall.R = ballR;
+                }
             }
             else if (areArmsStraight(skeleton) &&
                 areWristsTogether(skeleton) &&
                 !isCloseToBody(skeleton))           // launching
             {
+                // get angle
+
+                double angle = computeLaunchAngle(skeleton);
+                double velocity = BALL_V;
+                if (curBall != null)
+                {
+                    curBall.Velocity = velocity;
+                    curBall.Angle = angle;
+                    curBall = null;
+                }
             }
             else if (areWristsTogether(skeleton))   // moving around
             {
+
+                if (curBall != null)
+                {
+                    // here is where we should put a non-moving ball at X,Y
+                    double[] ballCoords = getJointForBall(skeleton);
+                    double ballR = curBall.R;
+                    double ballX = ballCoords[0] - ballR;
+                    double ballY = ballCoords[1] - ballR;
+
+                    curBall.setPosition(ballX, ballY);
+                }
             }
             else                                    // no ball / cancel
             {
                 // if there is a curball cancel it
+                if (curBall != null)
+                {
+                    _balls.removeBall(curBall);
+                    curBall = null;
+                }
                 // if no ball, keep having no ball
             }
+
+            _balls.animateBalls();
+            _balls.removeOutOfBoundsBalls();
+//            _balls.removeIntersectingBalls(targets);
+        }
+
+
+
+        private double computeGrownRadius(double currentR)
+        {
+            double grownR = currentR + R_GROWN_PER_FRAME;
+            if (grownR >= MAX_R)
+            {
+                grownR = MAX_R;
+            }
+            return grownR;
         }
 
         public override void controllerActivated(Dictionary<int, Target> targets)
         {
+            targets[1].setTargetPosition(0, 0);
+            targets[2].setTargetPosition(0, 0);
+            targets[3].setTargetPosition(0, 0);
+            targets[4].setTargetPosition(0, 0);
+            targets[5].setTargetPosition(0, 0);
+
             /* YOUR CODE HERE */
 
         }
@@ -133,17 +202,34 @@ namespace SkeletalTracking
             return Math.Sqrt(Math.Pow(x, 2) + Math.Pow(y, 2) + Math.Pow(z, 2));
         }
 
+        private double computeLaunchAngle(SkeletonData skeleton)
+        {
+
+            double[] ballJoint = getJointForBall(skeleton);
+
+            Joint hipCenter = skeleton.Joints[JointID.HipCenter].ScaleTo(640, 480, window.k_xMaxJointScale, window.k_yMaxJointScale);
+
+            double launchSize = Math.Sqrt(Math.Pow(ballJoint[0] - hipCenter.Position.X, 2) + Math.Pow(ballJoint[1] - hipCenter.Position.Y, 2));
+            double absoluteLaunchAngle = Math.Acos((ballJoint[0] - hipCenter.Position.X) / launchSize);
+            double launchSign = Math.Sign(Math.Asin((ballJoint[1] - hipCenter.Position.Y) / launchSize));
+            double launchAngle = absoluteLaunchAngle * launchSign;
+            return launchAngle;
+
+        }
+
         private double[] getJointForBall(SkeletonData skeleton)
         {
             Joint rightHand = skeleton.Joints[JointID.HandRight].ScaleTo(640, 480, window.k_xMaxJointScale, window.k_yMaxJointScale);
             Joint leftHand = skeleton.Joints[JointID.HandLeft].ScaleTo(640, 480, window.k_xMaxJointScale, window.k_yMaxJointScale);
 
-
             double[] ballCoords = new double[2];
+
             ballCoords[0] = (rightHand.Position.X + leftHand.Position.X) / 2.0;
             ballCoords[1] = (rightHand.Position.Y + leftHand.Position.Y) / 2.0;
 
             return ballCoords;
         }
+
+
     }
 }
