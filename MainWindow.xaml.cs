@@ -233,7 +233,7 @@ namespace SkeletalTracking
             Boolean changedController = false;
             if (e.Key == Key.D1)
             {
-                changedController = changedController || currentController == exampleController;
+                changedController = changedController || currentController != exampleController;
                 currentController = exampleController;
                 controllerText.Content = "Example Controller";
                 currentController.controllerActivated(targets);
@@ -241,7 +241,7 @@ namespace SkeletalTracking
 
             if (e.Key == Key.D2)
             {
-                changedController = changedController || currentController == yourController1;
+                changedController = changedController || currentController != yourController1;
                 currentController = yourController1;
                 controllerText.Content = "Controller 1";
                 currentController.controllerActivated(targets);
@@ -249,7 +249,7 @@ namespace SkeletalTracking
 
             if (e.Key == Key.D3)
             {
-                changedController = changedController || currentController == yourController2;
+                changedController = changedController || currentController != yourController2;
                 currentController = yourController2;
                 controllerText.Content = "Controller 2";
                 currentController.controllerActivated(targets);
