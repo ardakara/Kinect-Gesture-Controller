@@ -100,11 +100,13 @@ namespace SkeletalTracking
 
             _balls.animateBalls();
             _balls.removeOutOfBoundsBalls();
-//            _balls.removeIntersectingBalls(targets);
+            _balls.removeIntersectingBalls(targets,new ProcessTargetIntersectedDelegate(handleTargetIntersected));
         }
 
 
-
+        private void handleTargetIntersected(Target t, double value)
+        {
+        }
         private double computeGrownRadius(double currentR)
         {
             double grownR = currentR + R_GROWN_PER_FRAME;
