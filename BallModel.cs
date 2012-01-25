@@ -12,8 +12,8 @@ namespace SkeletalTracking
     class BallModel
     {
 
-        public static double MAX_V = 2;
-        public static double MIN_V = 8;
+        public static double MAX_V = 8;
+        public static double MIN_V = 2;
         public static double MAX_R = 40;
 
 

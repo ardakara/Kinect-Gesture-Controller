@@ -165,7 +165,6 @@ namespace SkeletalTracking
             }
             foreach (BallModel ball in removed)
             {
-
                 this.removeBall(ball);
             }
 
