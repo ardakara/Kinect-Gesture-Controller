@@ -19,6 +19,16 @@ namespace SkeletalTracking
             this.addBallModelsListener(window);
         }
 
+        public void clear()
+        {
+            
+            foreach (BallModel ball in this._balls.Values)
+            {
+                this.fireBallModelRemoved(ball);
+            }
+            this._balls.Clear();
+        }
+
         public int generateNextId()
         {
             int id = this._nextId;

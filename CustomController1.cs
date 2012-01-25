@@ -25,6 +25,11 @@ namespace SkeletalTracking
             _balls = new BallModels(this.window);
         }
 
+        public void removeAllBalls()
+        {
+            this._balls.clear();
+        }
+
         public override void processSkeletonFrame(SkeletonData skeleton, Dictionary<int, Target> targets)
         {
             // x,y launch angle, 
