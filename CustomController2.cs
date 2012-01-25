@@ -16,7 +16,6 @@ namespace SkeletalTracking
 
         double[] argb;
         double[] bright_rgb;
-        double[] hsv;
         double[] thetas;
         int left_circle_id;
         int right_circle_id;
@@ -25,7 +24,6 @@ namespace SkeletalTracking
         {
 
             argb = new double[] { 0.5, 0.5, 0.5, 0.5};
-            hsv = new double[3];
             bright_rgb = new double[] { 0.5, 0.5, 0.5, 0.5 };
 
             left_circle_id = -1;
@@ -46,13 +44,11 @@ namespace SkeletalTracking
 
         /*This function takes in a RGB value [0,1] and returns a byte [0, 255]*/
         private byte doubleToByte(double d)
-        {
-            
-            byte byte_val = (byte)((int)(d * 255));
-            return byte_val;
+        {           
+            return (byte)((int)(d * 255));
         }
 
-        private double trackHand(Joint hand, int lr, Dictionary<int, Target> targets) {
+        private void trackHand(Joint hand, int lr, Dictionary<int, Target> targets) {
             bool inCircle = false;
             for (int i = 1; i <= 4; i++)
             {
@@ -70,8 +66,6 @@ namespace SkeletalTracking
             {
                 thetas[lr] = -1;
             }
-
-            return 0;
         }
 
         private int increaseOrDecrease(Joint hand, int lr, Target cur)
@@ -116,10 +110,14 @@ namespace SkeletalTracking
         private void adjust_circles_color(int i, int change, Dictionary<int, Target> targets)
         {
             double colorDelta;
-            if (change < 0)
+            if (change == 0)
+            {
+                return;
+            }
+            else if (change < 0)
             {
                 colorDelta = -0.02;
-            }
+            } 
             else
             {
                 colorDelta = 0.02;
@@ -151,18 +149,26 @@ namespace SkeletalTracking
 
         private void scale_brightness(double colorDelta)
         {
-            double maxVal = Math.Max(argb[1], Math.Max(argb[2], argb[3]));
+            double val = 0;
+            if (colorDelta > 0)
+            {
+                val = Math.Max(argb[1], Math.Max(argb[2], argb[3]));
+            }
+            else
+            {
+                val = Math.Min(argb[1], Math.Min(argb[2], argb[3]));
+            }
 
-            double target = maxVal + colorDelta;
+            double target = val + colorDelta;
             if (target > 1.0) target = 1;
             if (target < 0.001) target = 0.001;
 
             for (int i = 1; i < 4; i++)
             {
-                argb[i] = Math.Round(argb[i] * target / maxVal, 10);
-                Console.Write(argb[i] + "\t");
+                argb[i] = Math.Round(argb[i] * target / val, 10);
+  //              Console.Write(argb[i] + "\t");
             }
-            Console.WriteLine();
+  //          Console.WriteLine();
         }
 
 
@@ -208,5 +214,4 @@ namespace SkeletalTracking
             targets[5].setTargetPosition(27, 390);
         }
     }
-
 }
