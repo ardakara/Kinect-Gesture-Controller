@@ -118,11 +118,11 @@ namespace SkeletalTracking
             double colorDelta;
             if (change < 0)
             {
-                colorDelta = -0.01;
+                colorDelta = -0.02;
             }
             else
             {
-                colorDelta = 0.01;
+                colorDelta = 0.02;
             }
 
             switch (i) {
@@ -195,7 +195,12 @@ namespace SkeletalTracking
             targets[3].setTargetColor(Color.FromArgb(127, 0, 0, doubleToByte(argb[3])));
             targets[4].setTargetColor(Color.FromArgb(127, 127, 127, 127));
             targets[5].setTargetColor(Color.FromArgb(127, doubleToByte(argb[1]), doubleToByte(argb[2]), doubleToByte(argb[3]) ));
-
+/*
+            for (int i = 1; i <= 5; i++)
+            {
+                targets[i].setTargetRadius(50.0);
+            }
+*/
             targets[1].setTargetPosition(140, 114);
             targets[2].setTargetPosition(245, 58);
             targets[3].setTargetPosition(351, 114);
