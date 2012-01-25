@@ -59,7 +59,7 @@ namespace SkeletalTracking
                     inCircle = true;
                     int change = increaseOrDecrease(hand, lr, cur);
                     adjust_circles_color(i, change, targets);
-                    targets[5].setTargetColor(Color.FromArgb(doubleToByte(argb[0]), doubleToByte(argb[1]), doubleToByte(argb[2]), doubleToByte(argb[3])));
+                    targets[5].setTargetColor(Color.FromArgb(0, doubleToByte(argb[1]), doubleToByte(argb[2]), doubleToByte(argb[3])));
                 }
             }
             if (!inCircle)
@@ -201,7 +201,7 @@ namespace SkeletalTracking
             targets[2].setTargetColor(Color.FromArgb(127, 0, doubleToByte(argb[2]), 0));
             targets[3].setTargetColor(Color.FromArgb(127, 0, 0, doubleToByte(argb[3])));
             targets[4].setTargetColor(Color.FromArgb(127, 127, 127, 127));
-            targets[5].setTargetColor(Color.FromArgb(127, doubleToByte(argb[1]), doubleToByte(argb[2]), doubleToByte(argb[3]) ));
+            targets[5].setTargetColor(Color.FromArgb(0, doubleToByte(argb[1]), doubleToByte(argb[2]), doubleToByte(argb[3]) ));
 /*
             for (int i = 1; i <= 5; i++)
             {
