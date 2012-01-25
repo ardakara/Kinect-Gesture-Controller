@@ -120,13 +120,51 @@ namespace SkeletalTracking
 
         public void removeOutOfBoundsBalls()
         {
+            List<BallModel> removed = new List<BallModel>();
+            foreach (BallModel ball in this._balls.Values)
+            {
+                if (ball.Velocity > 0 && !isInBounds(ball))
+                {
+                    removed.Add(ball);
+
+                }
+            }
+            foreach (BallModel ball in removed)
+            {
+                this.removeBall(ball);
+            }
+
         }
 
         public void removeIntersectingBalls(Dictionary<int, Target> targets)
         {
+            List<BallModel> removed = new List<BallModel>();
+            foreach (BallModel ball in this._balls.Values)
+            {
+                foreach (Target target in targets.Values)
+                {
+                    if (ball.Velocity > 0 && ballIntersectsTarget(ball, target))
+                    {
+                        removed.Add(ball);
+
+                        break;
+                    }
+                }
+            }
+            foreach (BallModel ball in removed)
+            {
+                this.removeBall(ball);
+            }
+
         }
         private static Boolean ballIntersectsTarget(BallModel ball, Target target)
         {
+            double ballX = ball.X;
+            double ballY = ball.Y;
+            double ballR = ball.R;
+            double targetX = target.getXPosition();
+            double targetY = target.getYPosition();
+            double targetR = target.getTargetRadius();
             return true;
         }
         /**
