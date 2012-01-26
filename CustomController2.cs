@@ -209,6 +209,15 @@ namespace SkeletalTracking
             targets[3].setTargetPosition(311, 58);
             targets[4].setTargetPosition(351, 170);
             targets[5].setTargetPosition(27, 390);
+
+            targets[1].setTargetText("R");
+            targets[2].setTargetText("G");
+            targets[3].setTargetText("B");
+            targets[4].setTargetText("Brightness");
+            targets[4].setFontSize(15);
+            targets[5].setTargetText("Dance Floor");
+            targets[5].setFontSize(20);
+
         }
     }
 }
