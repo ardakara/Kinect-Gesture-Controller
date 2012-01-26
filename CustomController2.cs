@@ -198,17 +198,21 @@ namespace SkeletalTracking
             targets[3].setTargetColor(Color.FromArgb(127, 0, 0, doubleToByte(argb[3])));
             targets[4].setTargetColor(Color.FromArgb(127, 127, 127, 127));
             targets[5].setTargetColor(Color.FromArgb(255, doubleToByte(argb[1]), doubleToByte(argb[2]), doubleToByte(argb[3]) ));
-/*
-            for (int i = 1; i <= 5; i++)
-            {
-                targets[i].setTargetRadius(50.0);
-            }
-*/
+
             targets[1].setTargetPosition(140, 170);
             targets[2].setTargetPosition(180, 58);
             targets[3].setTargetPosition(311, 58);
             targets[4].setTargetPosition(351, 170);
             targets[5].setTargetPosition(27, 390);
+
+            targets[1].setTargetText("R");
+            targets[2].setTargetText("G");
+            targets[3].setTargetText("B");
+            targets[4].setTargetText("Brightness");
+            targets[4].setFontSize(15);
+            targets[5].setTargetText("Dance Floor");
+            targets[5].setFontSize(20);
+
         }
     }
 }
