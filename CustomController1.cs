@@ -181,6 +181,7 @@ namespace SkeletalTracking
             targets[4].setFontSize(40);
 
             targets[5].hideTarget();
+            this.validTargets.Clear();
             this.validTargets.Add(1, targets[1]);
             this.validTargets.Add(2, targets[2]);
             this.validTargets.Add(3, targets[3]);
@@ -292,6 +293,10 @@ namespace SkeletalTracking
                 finishJoint[0] = direction[2];
                 finishJoint[1] = direction[3];
                 double launchSize = Math.Sqrt(Math.Pow(finishJoint[0] - startJoint[0], 2) + Math.Pow(finishJoint[1] - startJoint[1], 2));
+                if (launchSize == 0)
+                {
+                    return 0;
+                }
                 double absoluteLaunchAngle = Math.Acos((finishJoint[0] - startJoint[0]) / launchSize);
                 double launchSign = Math.Sign(Math.Asin((finishJoint[1] - startJoint[1]) / launchSize));
                 double launchAngle = absoluteLaunchAngle * launchSign;
