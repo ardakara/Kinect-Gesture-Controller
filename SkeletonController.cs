@@ -141,6 +141,13 @@ namespace SkeletalTracking
             return _canvasEl.Text;
         }
 
+        private void centerText()
+        {
+            double width = _canvasEl.ActualWidth;
+            double oldX = this.getXPosition();
+            double oldY = this.getYPosition();
+        }
+
         public void setTargetText(string text)
         {
             _canvasEl.Text = text;

@@ -72,7 +72,6 @@ namespace SkeletalTracking
             }
             else if (areWristsTogether(skeleton))   // moving around
             {
-
                 if (curBall != null)
                 {
                     // here is where we should put a non-moving ball at X,Y
@@ -97,7 +96,7 @@ namespace SkeletalTracking
 
             _balls.animateBalls();
             _balls.removeOutOfBoundsBalls();
-            _balls.removeIntersectingBalls(targets,new ProcessTargetIntersectedDelegate(handleTargetIntersected));
+         //   _balls.removeIntersectingBalls(targets,new ProcessTargetIntersectedDelegate(handleTargetIntersected));
         }
 
 
