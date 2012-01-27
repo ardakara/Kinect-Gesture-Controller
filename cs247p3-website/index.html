@@ -440,21 +440,26 @@
             <div class="row">
                 <div class="span12">
                     <h3>Kamehameha</h3>
-
                     <h4>Use case</h4>
-                    Let's project ourselves in the near future, when Kinect will be able to track several persons at a time. Let's also say that the DJ has in permanence 4 possible songs for the next track, that he displays on the top of the screen behind him. Then, people can vote for the next song. For that:
+                    Let's project ourselves in the near future, when Kinect will be able to track several persons at a time. Let's also say that the DJ has proposed 4 possible songs for the next track that he displays on the top of the screen behind him. Then, dancers can vote for the next song. In order to vote, the dancer must do the following:
                     <ul>
-                        <li>people can earn point if they move their body, that incourages them to dance</li>
-                        <li>they can spend their points in the kamehameha ball: the more points they spend, the bigger the ball becomes, and the more likely the ball is to hit the target</li>
-                    </ul>
-                    Note that this pointing device doesn't need to be too accurate since it's part of the game to try to aim the good song, knowing that it is possible to miss it.
-
+                        <li>by dancing and moving their bodies people can earn points</li>
+                        <li>dancers can spend their points in the energy ball (made famous in Dragon Ball Z); the more points they spend, the bigger the ball becomes, and the more likely the ball is to hit the target</li>
+						<li>the users will not lose points if they miss the song choices</li>
+					</ul>
+					<h4>Rationale</h4>
+					<ul>
+						<li>Putting both hands together at the center of your body is not a natural or common position for a dancer, so we won't have to worry about people accidentally triggering the system</li>
+						<li>A projectile selection method allows dancers to vote from anywhere, without navigating the dance floor</li>
+						<li>The range is ball size allows the user to specify how many points the user wants to allocate for a particular song</li>
+						<li>This method always allows for an easy to cancel selection and diffusing the energy ball by moving the hands apart </li>
+					</ul>
                     <h4>The gesture in detail</h4>
                     There are 4 steps for this gesture:
                     <ul>
-                        <li>charging the energy ball: the hands are together, and close from the body (on the z axis), and the arms are not straight</li>
-                        <li>moving the ball at a given charge status: the hands are together, but far from the body (on the z axis), and the arms are not straight</li>
-                        <li>throwing the ball: the hands are together and the arms are straight</li>
+                        <li>charging the energy ball: the hands are together, and close to the stomach (on the x, y, z axis), and the arms are not straight</li>
+                        <li>moving the ball at a given charge status (before shooting): the hands are together, but far from the body (on the z axis), and the arms are not straight</li>
+                        <li>throwing the ball: the hands are together and the arms are straight in the direction you want the ball to go</li>
                         <li>rest: any other configuration</li>
                     </ul>
                     These steps are (time) related as shown on the second picture on the right.
@@ -478,24 +483,29 @@
             <!-- Little circles -->
             <div class="row">
                 <div class="span12">
-                    <h3>Little circles</h3>
+                    <h3>Color Adjustment Knob</h3>
 
                     <h4>Use case</h4>
-                    The DJ wants to control the lights as he is doing his mix. We can imagine that the targets are potentiometers that can set:
+                    The DJ wants to control the lights as he is doing his mix. We can imagine that the targets are potentiometers that can set the following characteristics:
                     <ul>
                         <li>the amount of red lights</li>
                         <li>the amount of green lights</li>
                         <li>the amount of blue lights</li>
-                        <li>any other color</li>
                         <li>the brightness</li>
-                        <li>etc.</li>
                     </ul>
-                    This allows him to have an impact on other parameters of the room while allowing him to move his arms in rythm (or not...) to keep the party warm.
-
+                    This allows the DJ to change the music at the turn-tables, control the colors on the dance floor in the air all in the same place.
+					<h4>Rationale</h4>
+					<ul>
+						<li>We are not limited by the range of motion. Specifically, a horizontal or vertical bar would require an arm to reach the length of the bar or require an activation gesture</li>
+						<li>The C# built-in library provides HSL; however, the L value¡¦s meaning is not intuitive because it goes from black to the color to white, while ideally it would increase the color¡¦s brightness. </li>
+						<li> The HSV color space addresses brightness which is intuitive but requires extra processing which, after implementation and testing, resulted in significant lag. </li>				
+					</ul>	
+					<h4>The gesture in detail</h4>
+					The user places his/her hand inside one or more of the circles labeled "R", "G", "B", or "Brightness". To increase the color or brightness, the user will move his or her hand clock-wise around the center of the circle. Likewise, a counter-clockwise movement will decrease the magnitude of the color or brightness. 
                     <h4>To go further</h4>
-                    In fact, the application areas of this gesture are very broad.
+                    The future applications of gesture-controlled color adjustments are very broad.
                     <ul>
-                        <li>to stick to this area, we could also imagine that the targets are LPs and that the DJ plays with them with little circles, exaclty as he would have done in the real world; this could also be a way of selecting the time in the track</li>
+                        <li>to stick to this area, we could also imagine that the targets are LPs and that the DJ plays with them with little circles, exactly as he would have done in the real world; this could also be a way of selecting the time in the track</li>
                         <li>in some other areas, we could think of a painter who is making his mix of colors as he would have done with a real paint palette</li>
                     </ul>
                 </div>
