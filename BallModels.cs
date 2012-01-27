@@ -177,7 +177,9 @@ namespace SkeletalTracking
             double targetX = target.getXPosition();
             double targetY = target.getYPosition();
             double targetR = target.getTargetRadius();
-            return true;
+            double distance = Math.Sqrt(Math.Pow(ballX - targetX,2) + Math.Pow(ballY - targetY,2));
+
+            return distance < targetR+ballR*0.3;
         }
         /**
          * Determines whether the ball is in bounds of canvas

@@ -9,13 +9,17 @@ using System.Windows.Controls;
 using Microsoft.Research.Kinect.Nui;
 using Coding4Fun.Kinect.Wpf;
 
+
 namespace SkeletalTracking
 {
     class CustomController1 : SkeletonController
     {
+        private static int BALL_LOC_HIST_SIZE = 40;
         private static double R_GROWN_PER_FRAME = 0.3;
         private BallModels _balls;
         private BallModel curBall = null;
+        private Dictionary<int, Target> validTargets = new Dictionary<int, Target>();
+        private List<KeyValuePair<double, double>> _pastBallLocations = new List<KeyValuePair<double, double>>();
         public CustomController1(MainWindow win)
             : base(win)
         {
@@ -68,6 +72,7 @@ namespace SkeletalTracking
                     curBall.Velocity = velocity;
                     curBall.Angle = angle;
                     curBall = null;
+                    _pastBallLocations.Clear();
                 }
             }
             else if (areWristsTogether(skeleton))   // moving around
@@ -90,15 +95,46 @@ namespace SkeletalTracking
                 {
                     _balls.removeBall(curBall);
                     curBall = null;
+                    _pastBallLocations.Clear();
                 }
                 // if no ball, keep having no ball
             }
+            if (curBall != null)
+            {
+                this.addPastBallLocation(curBall.X, curBall.Y);
+            }
+
 
             _balls.animateBalls();
             _balls.removeOutOfBoundsBalls();
-         //   _balls.removeIntersectingBalls(targets,new ProcessTargetIntersectedDelegate(handleTargetIntersected));
+            _balls.removeIntersectingBalls(this.validTargets, new ProcessTargetIntersectedDelegate(handleTargetIntersected));
+     }
+
+        private void addPastBallLocation(double x, double y)
+        {
+            KeyValuePair<double, double> loc = new KeyValuePair<double, double>(x, y);
+            this._pastBallLocations.Insert(0, loc);
+            if (this._pastBallLocations.Count > BALL_LOC_HIST_SIZE)
+            {
+                this._pastBallLocations.RemoveRange(BALL_LOC_HIST_SIZE, this._pastBallLocations.Count - BALL_LOC_HIST_SIZE);
+            }
         }
 
+        private double[] computeBallDirection()
+        {
+            double[] direction = new double[4];
+            if (this._pastBallLocations.Count >= 2)
+            {
+                KeyValuePair<double, double> start = this._pastBallLocations.ElementAt<KeyValuePair<double, double>>(this._pastBallLocations.Count - 1);
+                KeyValuePair<double, double> finish = this._pastBallLocations.ElementAt<KeyValuePair<double, double>>(0);
+                direction[0] = start.Key;
+                direction[1] = start.Value;
+                direction[2] = finish.Key;
+                direction[3] = finish.Value;
+            }
+            return direction;
+
+        }
 
         private void handleTargetIntersected(Target t, double value)
         {
@@ -145,6 +181,10 @@ namespace SkeletalTracking
             targets[4].setFontSize(40);
 
             targets[5].hideTarget();
+            this.validTargets.Add(1, targets[1]);
+            this.validTargets.Add(2, targets[2]);
+            this.validTargets.Add(3, targets[3]);
+            this.validTargets.Add(4, targets[4]);
         }
 
         private bool areWristsTogether(SkeletonData skeleton)
@@ -230,15 +270,39 @@ namespace SkeletalTracking
         private double computeLaunchAngle(SkeletonData skeleton)
         {
 
-            double[] ballJoint = getJointForBall(skeleton);
 
-            Joint hipCenter = skeleton.Joints[JointID.HipCenter].ScaleTo(640, 480, window.k_xMaxJointScale, window.k_yMaxJointScale);
+            if (curBall != null)
+            {
+                double ballX = curBall.X;
 
-            double launchSize = Math.Sqrt(Math.Pow(ballJoint[0] - hipCenter.Position.X, 2) + Math.Pow(ballJoint[1] - hipCenter.Position.Y, 2));
-            double absoluteLaunchAngle = Math.Acos((ballJoint[0] - hipCenter.Position.X) / launchSize);
-            double launchSign = Math.Sign(Math.Asin((ballJoint[1] - hipCenter.Position.Y) / launchSize));
-            double launchAngle = absoluteLaunchAngle * launchSign;
-            return launchAngle;
+                double[] ballJoint = getJointForBall(skeleton);
+
+                Joint hipCenter = skeleton.Joints[JointID.HipCenter].ScaleTo(640, 480, window.k_xMaxJointScale, window.k_yMaxJointScale);
+                Joint shoulderJoint = skeleton.Joints[JointID.ShoulderRight].ScaleTo(640, 480, window.k_xMaxJointScale, window.k_yMaxJointScale);
+                if (ballX < hipCenter.Position.X)
+                {
+                    shoulderJoint = skeleton.Joints[JointID.ShoulderLeft].ScaleTo(640, 480, window.k_xMaxJointScale, window.k_yMaxJointScale);
+                }
+
+                double[] startJoint = new double[2] { hipCenter.Position.X, hipCenter.Position.Y };
+                double[] finishJoint = ballJoint;
+                double[] direction = this.computeBallDirection();
+                startJoint[0] = direction[0];
+                startJoint[1] = direction[1];
+                finishJoint[0] = direction[2];
+                finishJoint[1] = direction[3];
+                double launchSize = Math.Sqrt(Math.Pow(finishJoint[0] - startJoint[0], 2) + Math.Pow(finishJoint[1] - startJoint[1], 2));
+                double absoluteLaunchAngle = Math.Acos((finishJoint[0] - startJoint[0]) / launchSize);
+                double launchSign = Math.Sign(Math.Asin((finishJoint[1] - startJoint[1]) / launchSize));
+                double launchAngle = absoluteLaunchAngle * launchSign;
+                return launchAngle;
+            }
+            else
+            {
+                return 0;
+            }
+
+
 
         }
 
